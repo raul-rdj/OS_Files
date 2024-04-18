@@ -19,6 +19,8 @@ int nextTid = 0;
 
 Task *selectNextTask();
 
+extern int timeUnit;//CPU time
+
 // add a new task to the list of tasks
 void add(char *name, int arrivalTime, int burst) {
     // first create the new task
@@ -46,7 +48,7 @@ void schedule()
     while (head != NULL) {
         current = selectNextTask();
 
-        //run(current, current->burst);
+        run(current, current->burst);
 	
 	//run calculations for current task
 	calculateCurrent(current);
@@ -64,5 +66,20 @@ Task *selectNextTask()
 }
 
 void calculateCurrent(Task *task){
-	printf("Calculated: %s\n", task->name);
+	//initializations:
+	static int turnAroundTime = 0;
+	static int waitingTime = 0;
+	static int responseTime = 0;
+
+	//calculations
+	int currentTurnAroundTime = timeUnit - task->arrivalTime;
+	int currentWaitingTime = currentTurnAroundTime - task->burst;
+	int currentResponseTime = (timeUnit - task->burst) - task->arrivalTime;
+	float responseRatio = (currentWaitingTime + task->burst)/task->burst;
+
+	turnAroundTime = turnAroundTime + currentTurnAroundTime;
+	waitingTime = waitingTime + currentWaitingTime;
+	responseTime = responseTime + currentResponseTime;
+
+	printf("[%s]\t[%d]\t[%d]\t[%d]\t[%.2f]\n",task->name, currentTurnAroundTime, currentWaitingTime, currentResponseTime, responseRatio);
 }
