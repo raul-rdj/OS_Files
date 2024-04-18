@@ -9,7 +9,7 @@
 #include "list.h"
 #include "task.h"
 
-
+/*
 // add a new task to the list of tasks
 void insert(struct node **head, Task *newTask) {
     // add the new task to the list
@@ -18,6 +18,30 @@ void insert(struct node **head, Task *newTask) {
     newNode->task = newTask;
     newNode->next = *head;
     *head = newNode;
+}
+*/
+
+//new insert function to insert new nodes at the end of the linked list instead of at the head
+void insert(struct node **head, Task *newTask){
+	struct node *newNode = malloc(sizeof(struct node));
+	if(newNode == NULL){
+		return;
+	}
+
+	newNode->task = newTask;
+	newNode->next = NULL;
+
+	if(*head == NULL){
+		*head = newNode;
+		return;
+	}
+
+	struct node *current = *head;
+	while (current->next != NULL){
+		current = current->next;
+	}
+
+	current->next = newNode;
 }
 
 // delete the selected task from the list

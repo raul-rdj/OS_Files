@@ -46,7 +46,10 @@ void schedule()
     while (head != NULL) {
         current = selectNextTask();
 
-        run(current, current->burst);
+        //run(current, current->burst);
+	
+	//run calculations for current task
+	calculateCurrent(current);
 
         delete(&head, current);
     }
@@ -58,4 +61,8 @@ void schedule()
 Task *selectNextTask()
 {
     return head->task;
+}
+
+void calculateCurrent(Task *task){
+	printf("Calculated: %s\n", task->name);
 }
