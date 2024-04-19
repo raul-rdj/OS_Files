@@ -48,7 +48,7 @@ void calculateCurrent(Task *task){
 	int currentTurnAroundTime = timeUnit - task->arrivalTime;
 	int currentWaitingTime = currentTurnAroundTime - task->burst;
 	int currentResponseTime = (timeUnit - task->burst) - task->arrivalTime;
-	float responseRatio = (currentWaitingTime + task->burst)/task->burst;
+	float responseRatio = (float)(currentWaitingTime + task->burst)/task->burst;
 
 	turnAroundTime = turnAroundTime + currentTurnAroundTime;
 	waitingTime = waitingTime + currentWaitingTime;
@@ -56,7 +56,7 @@ void calculateCurrent(Task *task){
 	processCount++;
 	sumBurst = sumBurst + task->burst;
 
-	printf("%20s%20d%20d%20d%20.2f\n", task->name, currentTurnAroundTime, currentWaitingTime, currentResponseTime, responseRatio);
+	printf("%5s%20d%20d%20d%20.2f\n", task->name, currentTurnAroundTime, currentWaitingTime, currentResponseTime, responseRatio);
 
 	//Calculating averages/throughput/cpu utilization when on last task
 	if(head->next == NULL){
@@ -66,11 +66,12 @@ void calculateCurrent(Task *task){
 		float throughput = (float)sumBurst / processCount;
 		float cpuUtil = (float)(timeUnit - idleTime)/timeUnit;
 		
-		printf("Avg TT: [%.2f]\n", avgTT);
-		printf("Avg WT: [%.2f]\n", avgWT);
-		printf("Avg RT: [%.2f]\n", avgRT);
-		printf("Throughput: [%.2f]\n", throughput);
-		printf("CPU Utiliziation: [%.2f]\n", cpuUtil);
+		printf("\n-----AVERAGES-----\n");
+		printf("Average TT:->[%.2f]\n", avgTT);
+		printf("Average WT:->[%.2f]\n", avgWT);
+		printf("Average RT:->[%.2f]\n", avgRT);
+		printf("Throughput:->[%.2f]\n", throughput);
+		printf("CPU Util---->[%.2f%%]\n", cpuUtil * 100);
 
 	}
 }
@@ -86,10 +87,17 @@ void schedule()
     traverse(head);
 	
     //print column titles here
-    printf("           %20s%20s%20s%20s%20s\n", "Task", "Turnaround Time", "Waiting Time", "Response Time", "Response Ratio");
+    printf("\n-----CALCULATIONS-----\n");
+    printf("           %5s%20s%20s%20s%20s\n", "Task", "Turnaround Time", "Waiting Time", "Response Time", "Response Ratio");
 
     while (head != NULL) {
         current = selectNextTask();
+
+	//check whether the current task has arrived
+	if(timeUnit < current->arrivalTime){
+		idleTime = idleTime + (current->arrivalTime - timeUnit);
+		timeUnit = current->arrivalTime;
+	}
 
         run(current, current->burst);
 	
