@@ -8,11 +8,12 @@
 
 //added CPU time
 int timeUnit = 0;
+int idleTime = 0;
 
 
 // run this task for the specified time howLong
 void run(Task *task, int howLong) {
 	//printf("Running task = [%s] [%d] [%d] for %d units.\n",task->name, task->arrivalTime, task->burst, howLong);
-	printf("Running {%s} -----> ", task->name);
+	printf("Running--->");
 	timeUnit = timeUnit + howLong; //updates CPU time after running task
 }
